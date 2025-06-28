@@ -1,8 +1,7 @@
 // src/components/ThreeJSBackground.js
 
 import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three'; // Importa a biblioteca THREE
-// THREE é global porque está sendo carregado via CDN no public/index.html
+import * as THREE from 'three'; // <-- IMPORTAÇÃO CORRETA!
 
 const ThreeJSBackground = () => {
     const canvasRef = useRef(null);
@@ -11,6 +10,7 @@ const ThreeJSBackground = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
+        // Note: Agora usamos THREE diretamente, pois ele foi importado.
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
@@ -81,14 +81,13 @@ const ThreeJSBackground = () => {
         animate();
 
         return () => {
-            // Limpeza ao desmontar o componente
             document.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('resize', handleResize);
             renderer.dispose();
             geometry.dispose();
             material.dispose();
         };
-    }, []); // Array de dependências vazio significa que este efeito roda uma vez ao montar
+    }, []);
 
     return <canvas id="threejs-background" ref={canvasRef}></canvas>;
 };
